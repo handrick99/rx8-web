@@ -16,7 +16,7 @@ export function BrandModelRail({ onModelSelect }: Props) {
     <section id="browse" className="border-t border-line bg-bg">
       <div className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
         <p className="text-[11px] font-medium tracking-[0.22em] text-ink-muted uppercase">
-          Nearly 700 models · 26+ maisons
+          Nearly 700 models · {maisons.length} maisons
         </p>
         <h2 className="font-display mt-5 text-[clamp(2rem,4.5vw,3.5rem)] font-semibold leading-[1.05] tracking-[-0.03em]">
           Find your watch.

@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { WHATSAPP_DISPLAY, WHATSAPP_HREF } from "@/data/contact";
 
 type Prefill = {
   brand?: string;
@@ -30,7 +31,17 @@ export function FittingForm({ prefill }: { prefill?: Prefill }) {
             Request a cut.
           </h2>
           <p className="mt-6 max-w-[36ch] text-[15px] leading-relaxed text-ink-muted">
-            Tell us the watch. We’ll confirm fit, timing, and next steps.
+            Tell us the watch. We’ll confirm fit, timing, and next steps. Or
+            message on{" "}
+            <a
+              href={WHATSAPP_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-ink underline decoration-line underline-offset-4 hover:decoration-ink"
+            >
+              WhatsApp {WHATSAPP_DISPLAY}
+            </a>
+            .
           </p>
         </div>
 

@@ -6,8 +6,10 @@ import { FilmSection } from "@/components/FilmSection";
 import { FittingForm } from "@/components/FittingForm";
 import { Hero } from "@/components/Hero";
 import { Installation } from "@/components/Installation";
+import { ProtectionZones } from "@/components/ProtectionZones";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteNav } from "@/components/SiteNav";
+import { SocialProof } from "@/components/SocialProof";
 
 export default function Home() {
   const [prefill, setPrefill] = useState<{ brand?: string; model?: string }>(
@@ -21,6 +23,7 @@ export default function Home() {
       <main>
         <Hero />
         <FilmSection />
+        <ProtectionZones />
         <BrandModelRail
           onModelSelect={(brand, model) => {
             setPrefill({ brand, model });
@@ -30,6 +33,7 @@ export default function Home() {
           }}
         />
         <Installation />
+        <SocialProof />
         <FittingForm prefill={prefill} />
       </main>
       <SiteFooter />
