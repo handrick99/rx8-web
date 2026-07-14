@@ -1,0 +1,67 @@
+import Image from "next/image";
+
+const steps = [
+  {
+    n: "01",
+    title: "Specify",
+    text: "Brand, model, reference.",
+  },
+  {
+    n: "02",
+    title: "Cut",
+    text: "Film tailored to your watch’s geometry.",
+  },
+  {
+    n: "03",
+    title: "Fit",
+    text: "Installed in person so every edge seats clean.",
+  },
+];
+
+export function Installation() {
+  return (
+    <section id="fitting" className="border-t border-line bg-bg-soft">
+      <div className="mx-auto grid max-w-[1400px] grid-cols-1 md:grid-cols-2">
+        <div className="flex flex-col justify-center px-6 py-24 md:px-10 md:py-32">
+          <p className="text-[11px] font-medium tracking-[0.22em] text-ink-muted uppercase">
+            Installation
+          </p>
+          <h2 className="font-display mt-5 max-w-[14ch] text-[clamp(2rem,4vw,3.25rem)] font-semibold leading-[1.05] tracking-[-0.03em]">
+            Fitted like the watch was made.
+          </h2>
+          <p className="mt-6 max-w-[42ch] text-[15px] leading-relaxed text-ink-muted">
+            RX8 is built around in-person installation. Each piece is treated as
+            a finished object — measured, cut, and applied with the same care as
+            the watch itself.
+          </p>
+
+          <ol className="mt-14 space-y-8 border-t border-line pt-10">
+            {steps.map((step) => (
+              <li key={step.n} className="grid grid-cols-[3rem_1fr] gap-4">
+                <span className="pt-1 text-[12px] tracking-[0.12em] text-ink-muted">
+                  {step.n}
+                </span>
+                <div>
+                  <h3 className="font-display text-[18px] font-medium tracking-[-0.01em]">
+                    {step.title}
+                  </h3>
+                  <p className="mt-2 text-[15px] text-ink-muted">{step.text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        <div className="relative min-h-[420px] md:min-h-full">
+          <Image
+            src="https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?auto=format&fit=crop&w=1600&q=80"
+            alt="Watch on a clean studio surface"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover"
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
