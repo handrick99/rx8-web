@@ -1,24 +1,24 @@
 const zones = [
   {
-    id: "case",
-    title: "Case & lugs",
-    text: "Where desks, doorframes, and daily contact leave marks first.",
-    slot: "Photo — case & lugs",
-    image: null as string | null,
-  },
-  {
     id: "bezel",
-    title: "Bezel & edges",
-    text: "Bright-work and corners that catch light — and wear — the most.",
-    slot: "Photo — bezel",
+    title: "Bezel & crystal",
+    text: "The face of the watch — polished edges, crystal, and the details you see first.",
+    slot: "Photo — bezel & crystal",
     image: null as string | null,
   },
   {
     id: "bracelet",
-    title: "Bracelet & clasp",
-    text: "Links, end links, and clasp hardware under constant friction.",
+    title: "Bracelet",
+    text: "Links and end pieces that take friction from desks, cuffs, and daily wear.",
     slot: "Photo — bracelet",
     image: "/images/zones/bracelet.jpg",
+  },
+  {
+    id: "clasp",
+    title: "Clasp",
+    text: "Hardware that opens, closes, and rests against skin — protected where it matters.",
+    slot: "Photo — clasp",
+    image: null as string | null,
   },
 ];
 
