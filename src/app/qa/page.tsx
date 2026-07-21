@@ -23,10 +23,6 @@ export default function QaPage() {
           <h1 className="font-display mt-5 text-[clamp(2.25rem,5vw,3.75rem)] font-semibold leading-[1.05] tracking-[-0.03em]">
             Common questions.
           </h1>
-          <p className="mt-6 max-w-[42ch] text-[15px] leading-relaxed text-ink-muted">
-            Straight answers on fit, care, water, and warranty — translated from
-            our studio guidance.
-          </p>
 
           <div className="mt-14">
             <FaqList />

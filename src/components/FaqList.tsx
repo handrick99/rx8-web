@@ -4,7 +4,7 @@ import { useState } from "react";
 import { faqItems } from "@/data/faq";
 
 export function FaqList() {
-  const [open, setOpen] = useState<number | null>(0);
+  const [open, setOpen] = useState<number | null>(null);
 
   return (
     <div className="border-t border-line">
