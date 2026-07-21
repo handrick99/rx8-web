@@ -1,21 +1,21 @@
 const zones = [
   {
-    id: "case",
-    title: "Case & lugs",
-    text: "Where desks, doorframes, and daily contact leave marks first.",
-    slot: "Photo — case & lugs",
-  },
-  {
     id: "bezel",
-    title: "Bezel & edges",
-    text: "Bright-work and corners that catch light — and wear — the most.",
-    slot: "Photo — bezel",
+    title: "Bezel & crystal",
+    text: "The face of the watch — polished edges, crystal, and the details you see first.",
+    image: "/images/zones/bezel.jpg",
   },
   {
     id: "bracelet",
-    title: "Bracelet & clasp",
-    text: "Links, end links, and clasp hardware under constant friction.",
-    slot: "Photo — bracelet",
+    title: "Bracelet",
+    text: "Links and end pieces that take friction from desks, cuffs, and daily wear.",
+    image: "/images/zones/bracelet.jpg",
+  },
+  {
+    id: "clasp",
+    title: "Clasp",
+    text: "Hardware that opens, closes, and rests against skin — protected where it matters.",
+    image: "/images/zones/clasp.jpg",
   },
 ];
 
@@ -31,21 +31,19 @@ export function ProtectionZones() {
         </h2>
         <p className="mt-5 max-w-[42ch] text-[15px] leading-relaxed text-ink-muted">
           We protect the zones that take the hits — cut to your reference, not
-          a generic sheet. Photos of each zone will land here.
+          a generic sheet.
         </p>
 
         <div className="mt-16 grid gap-10 md:grid-cols-3 md:gap-8">
-          {zones.map((zone, i) => (
+          {zones.map((zone) => (
             <article key={zone.id} className="min-w-0">
-              <div className="relative aspect-[4/5] overflow-hidden bg-[linear-gradient(160deg,#e8e4db_0%,#f4f1ea_50%,#ddd8cf_100%)]">
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 text-center">
-                  <span className="text-[11px] tracking-[0.2em] text-ink-muted uppercase">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="text-[13px] tracking-[0.04em] text-ink-muted">
-                    {zone.slot}
-                  </span>
-                </div>
+              <div className="relative aspect-[4/5] overflow-hidden bg-[#1a1a1a]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={zone.image}
+                  alt={zone.title}
+                  className="absolute inset-0 h-full w-full object-cover object-center"
+                />
               </div>
               <h3 className="font-display mt-6 text-[20px] font-medium tracking-[-0.01em]">
                 {zone.title}
