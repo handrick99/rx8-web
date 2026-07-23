@@ -26,7 +26,7 @@ export function SocialProof() {
           {slots.map((slot) => (
             <div
               key={slot.id}
-              className="relative aspect-square overflow-hidden bg-[linear-gradient(145deg,#ece8e0,#f7f5f1_40%,#e2ddd4)]"
+              className="relative aspect-square overflow-hidden bg-bg"
             >
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-center">
                 <span className="text-[11px] tracking-[0.18em] text-ink-muted uppercase">

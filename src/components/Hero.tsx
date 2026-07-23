@@ -21,7 +21,7 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="relative min-h-[100svh] overflow-hidden bg-ink"
+      className="relative min-h-[100svh] overflow-hidden bg-bg"
     >
       {/* Full-bleed video plane */}
       <div className="absolute inset-0">
@@ -65,7 +65,7 @@ export function Hero() {
           <div className="animate-rise delay-3 mt-10 flex flex-wrap items-center gap-6">
             <a
               href="#browse"
-              className="inline-flex items-center bg-white px-7 py-3.5 text-[13px] tracking-[0.08em] text-ink transition-opacity hover:opacity-90"
+              className="inline-flex items-center bg-white px-7 py-3.5 text-[13px] tracking-[0.08em] text-[#0a0a0a] transition-opacity hover:opacity-90"
             >
               Protect your watch
             </a>

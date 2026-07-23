@@ -67,8 +67,6 @@ export function BrandModelRail({ onModelSelect }: Props) {
               })}
             </div>
 
-            <div className="h-px w-full bg-line" />
-
             <div className="mt-10 flex flex-wrap items-baseline justify-between gap-4">
               <p className="font-display text-[clamp(1.6rem,3vw,2.25rem)] font-medium tracking-[-0.02em]">
                 {active.brand}
