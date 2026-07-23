@@ -1,3 +1,5 @@
+import { Reveal } from "@/components/Reveal";
+
 const zones = [
   {
     id: "bezel",
@@ -21,37 +23,41 @@ const zones = [
 
 export function ProtectionZones() {
   return (
-    <section id="zones" className="border-t border-line bg-bg">
-      <div className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
-        <p className="text-[11px] font-medium tracking-[0.22em] text-ink-muted uppercase">
-          Coverage
-        </p>
-        <h2 className="font-display mt-5 max-w-[16ch] text-[clamp(2rem,4.5vw,3.5rem)] font-semibold leading-[1.05] tracking-[-0.03em]">
-          Where the film earns its place.
-        </h2>
-        <p className="mt-5 max-w-[42ch] text-[15px] leading-relaxed text-ink-muted">
-          We protect the zones that take the hits — cut to your reference, not
-          a generic sheet.
-        </p>
+    <section id="zones" className="screen-section bg-bg">
+      <div className="mx-auto w-full max-w-[1400px] px-6 py-16 md:px-10">
+        <Reveal>
+          <p className="text-[11px] font-medium tracking-[0.22em] text-ink-muted uppercase">
+            Coverage
+          </p>
+          <h2 className="font-display mt-5 max-w-[16ch] text-[clamp(2rem,4.5vw,3.5rem)] font-semibold leading-[1.05] tracking-[-0.03em]">
+            Where the film earns its place.
+          </h2>
+          <p className="mt-5 max-w-[42ch] text-[15px] leading-relaxed text-ink-muted">
+            We protect the zones that take the hits — cut to your reference, not
+            a generic sheet.
+          </p>
+        </Reveal>
 
-        <div className="mt-16 grid gap-10 md:grid-cols-3 md:gap-8">
-          {zones.map((zone) => (
-            <article key={zone.id} className="min-w-0">
-              <div className="relative aspect-[4/5] overflow-hidden bg-[#1a1a1a]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={zone.image}
-                  alt={zone.title}
-                  className="absolute inset-0 h-full w-full object-cover object-center"
-                />
-              </div>
-              <h3 className="font-display mt-6 text-[20px] font-medium tracking-[-0.01em]">
-                {zone.title}
-              </h3>
-              <p className="mt-3 max-w-[30ch] text-[15px] leading-relaxed text-ink-muted">
-                {zone.text}
-              </p>
-            </article>
+        <div className="mt-12 grid gap-10 md:mt-14 md:grid-cols-3 md:gap-8">
+          {zones.map((zone, i) => (
+            <Reveal key={zone.id} delay={100 + i * 110}>
+              <article className="min-w-0">
+                <div className="relative aspect-square overflow-hidden bg-[#1a1a1a]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={zone.image}
+                    alt={zone.title}
+                    className="absolute inset-0 h-full w-full object-cover object-center"
+                  />
+                </div>
+                <h3 className="font-display mt-6 text-[20px] font-medium tracking-[-0.01em]">
+                  {zone.title}
+                </h3>
+                <p className="mt-3 max-w-[30ch] text-[15px] leading-relaxed text-ink-muted">
+                  {zone.text}
+                </p>
+              </article>
+            </Reveal>
           ))}
         </div>
       </div>

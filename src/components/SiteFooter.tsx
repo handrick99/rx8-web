@@ -2,7 +2,7 @@ import { WHATSAPP_DISPLAY, WHATSAPP_HREF } from "@/data/contact";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-line bg-bg-soft">
+    <footer className="bg-bg-soft">
       <div className="mx-auto flex max-w-[1400px] flex-col gap-10 px-6 py-14 md:px-10">
         <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
           <div>

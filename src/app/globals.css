@@ -32,6 +32,12 @@ html {
   scroll-behavior: smooth;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 body {
   margin: 0;
   background: var(--bg);
@@ -46,6 +52,14 @@ body {
 
 .font-display {
   font-family: var(--font-display), system-ui, sans-serif;
+}
+
+/* Full-viewport sections — continuous page, no hard chapter chrome */
+.screen-section {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .rail-scroll {
@@ -165,4 +179,27 @@ button {
 
 .field::placeholder {
   color: var(--ink-muted);
+}
+
+/* Quiet AP-style scroll reveal — used sparingly on titles / media */
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 22px, 0);
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-in {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }

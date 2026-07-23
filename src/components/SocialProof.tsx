@@ -5,8 +5,8 @@ const slots = Array.from({ length: 6 }, (_, i) => ({
 
 export function SocialProof() {
   return (
-    <section id="proof" className="border-t border-line bg-bg-soft">
-      <div className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
+    <section id="proof" className="screen-section bg-bg-soft">
+      <div className="mx-auto w-full max-w-[1400px] px-6 py-16 md:px-10">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="text-[11px] font-medium tracking-[0.22em] text-ink-muted uppercase">

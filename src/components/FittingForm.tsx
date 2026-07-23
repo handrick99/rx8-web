@@ -21,8 +21,8 @@ export function FittingForm({ prefill }: { prefill?: Prefill }) {
   }
 
   return (
-    <section id="request" className="border-t border-line bg-bg">
-      <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-16 px-6 py-24 md:grid-cols-12 md:px-10 md:py-32">
+    <section id="request" className="screen-section bg-bg">
+      <div className="mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-16 px-6 py-16 md:grid-cols-12 md:px-10">
         <div className="md:col-span-5">
           <p className="text-[11px] font-medium tracking-[0.22em] text-ink-muted uppercase">
             Request
