@@ -60,11 +60,11 @@ export function Installation() {
         <Reveal className="relative min-h-[50svh] h-full w-full md:min-h-full" delay={120}>
           <div className="relative min-h-[50svh] h-full w-full md:absolute md:inset-0 md:min-h-full">
             <Image
-              src="https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?auto=format&fit=crop&w=1600&q=80"
-              alt="Watch on a clean studio surface"
+              src="/images/installation-watch.jpg"
+              alt="Audemars Piguet Royal Oak chronograph"
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover"
+              className="object-cover object-center"
             />
             <div
               aria-hidden
