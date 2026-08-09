@@ -1,4 +1,9 @@
-import { WHATSAPP_DISPLAY, WHATSAPP_HREF } from "@/data/contact";
+import {
+  EMAIL,
+  EMAIL_HREF,
+  WHATSAPP_DISPLAY,
+  WHATSAPP_HREF,
+} from "@/data/contact";
 
 export function SiteFooter() {
   return (
@@ -36,6 +41,9 @@ export function SiteFooter() {
               className="hover:text-ink"
             >
               WhatsApp {WHATSAPP_DISPLAY}
+            </a>
+            <a href={EMAIL_HREF} className="hover:text-ink">
+              {EMAIL}
             </a>
           </div>
         </div>

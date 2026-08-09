@@ -2,7 +2,12 @@ import type { Metadata } from "next";
 import { FaqList } from "@/components/FaqList";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteNav } from "@/components/SiteNav";
-import { WHATSAPP_DISPLAY, WHATSAPP_HREF } from "@/data/contact";
+import {
+  EMAIL,
+  EMAIL_HREF,
+  WHATSAPP_DISPLAY,
+  WHATSAPP_HREF,
+} from "@/data/contact";
 
 export const metadata: Metadata = {
   title: "Q&A — RX8 Studio",
@@ -41,8 +46,15 @@ export default function QaPage() {
               className="text-ink underline decoration-line underline-offset-4 hover:decoration-ink"
             >
               WhatsApp {WHATSAPP_DISPLAY}
-            </a>{" "}
-            or{" "}
+            </a>
+            ,{" "}
+            <a
+              href={EMAIL_HREF}
+              className="text-ink underline decoration-line underline-offset-4 hover:decoration-ink"
+            >
+              {EMAIL}
+            </a>
+            , or{" "}
             <a
               href="/#request"
               className="text-ink underline decoration-line underline-offset-4 hover:decoration-ink"

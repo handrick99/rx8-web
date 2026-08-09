@@ -1,7 +1,12 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { WHATSAPP_DISPLAY, WHATSAPP_HREF } from "@/data/contact";
+import {
+  EMAIL,
+  EMAIL_HREF,
+  WHATSAPP_DISPLAY,
+  WHATSAPP_HREF,
+} from "@/data/contact";
 
 type Prefill = {
   brand?: string;
@@ -40,6 +45,13 @@ export function FittingForm({ prefill }: { prefill?: Prefill }) {
               className="text-ink underline decoration-line underline-offset-4 hover:decoration-ink"
             >
               WhatsApp {WHATSAPP_DISPLAY}
+            </a>{" "}
+            or{" "}
+            <a
+              href={EMAIL_HREF}
+              className="text-ink underline decoration-line underline-offset-4 hover:decoration-ink"
+            >
+              {EMAIL}
             </a>
             .
           </p>
