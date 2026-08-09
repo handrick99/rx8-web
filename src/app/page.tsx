@@ -9,7 +9,6 @@ import { Installation } from "@/components/Installation";
 import { ProtectionZones } from "@/components/ProtectionZones";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteNav } from "@/components/SiteNav";
-import { SocialProof } from "@/components/SocialProof";
 
 export default function Home() {
   const [prefill, setPrefill] = useState<{ brand?: string; model?: string }>(
@@ -33,7 +32,6 @@ export default function Home() {
           }}
         />
         <Installation />
-        <SocialProof />
         <FittingForm prefill={prefill} />
       </main>
       <SiteFooter />

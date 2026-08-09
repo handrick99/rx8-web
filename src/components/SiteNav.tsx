@@ -4,7 +4,6 @@ const links = [
   { href: "/#protect", label: "Protect" },
   { href: "/#zones", label: "Coverage" },
   { href: "/#browse", label: "Browse" },
-  { href: "/#proof", label: "Studio" },
   { href: "/qa", label: "Q&A" },
 ];
 
