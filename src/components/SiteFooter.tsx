@@ -28,6 +28,9 @@ export function SiteFooter() {
             <a href="/#browse" className="hover:text-ink">
               Browse
             </a>
+            <a href="/pricing" className="hover:text-ink">
+              Pricing
+            </a>
             <a href="/qa" className="hover:text-ink">
               Q&A
             </a>

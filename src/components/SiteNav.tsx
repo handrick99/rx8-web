@@ -1,9 +1,13 @@
+"use client";
+
+import { useState } from "react";
 import { WHATSAPP_DISPLAY, WHATSAPP_HREF } from "@/data/contact";
 
 const links = [
   { href: "/#protect", label: "Protect" },
   { href: "/#zones", label: "Coverage" },
   { href: "/#browse", label: "Browse" },
+  { href: "/pricing", label: "Pricing" },
   { href: "/qa", label: "Q&A" },
 ];
 
@@ -12,6 +16,7 @@ export function SiteNav({
 }: {
   variant?: "overlay" | "solid";
 }) {
+  const [open, setOpen] = useState(false);
   const isOverlay = variant === "overlay";
 
   const bar = isOverlay
@@ -55,11 +60,58 @@ export function SiteNav({
           >
             WhatsApp
           </a>
-          <a href="/#request" className={`text-[13px] tracking-[0.04em] ${cta}`}>
+          <a
+            href="/#request"
+            className={`hidden text-[13px] tracking-[0.04em] lg:inline ${cta}`}
+          >
             Book a fitting
           </a>
+          <button
+            type="button"
+            className={`text-[13px] tracking-[0.04em] lg:hidden ${link}`}
+            aria-expanded={open}
+            aria-controls="mobile-nav"
+            onClick={() => setOpen((value) => !value)}
+          >
+            {open ? "Close" : "Menu"}
+          </button>
         </div>
       </div>
+      {open ? (
+        <nav
+          id="mobile-nav"
+          className="border-t border-line bg-bg px-6 py-8 lg:hidden md:px-10"
+        >
+          <ul className="flex flex-col gap-5">
+            {links.map((item) => (
+              <li key={item.href}>
+                <a
+                  href={item.href}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setOpen(false);
+                    window.location.assign(item.href);
+                  }}
+                  className="text-[15px] tracking-[0.04em] text-ink"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
+            <li>
+              <a
+                href={WHATSAPP_HREF}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setOpen(false)}
+                className="text-[15px] tracking-[0.04em] text-ink-muted"
+              >
+                WhatsApp {WHATSAPP_DISPLAY}
+              </a>
+            </li>
+          </ul>
+        </nav>
+      ) : null}
       <span className="sr-only">WhatsApp {WHATSAPP_DISPLAY}</span>
     </header>
   );
