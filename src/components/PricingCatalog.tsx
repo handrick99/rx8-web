@@ -1,6 +1,6 @@
 "use client";
 
-import { useDeferredValue, useMemo, useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import {
   brandItemCount,
   formatPrice,
@@ -38,7 +38,20 @@ function brandSlug(brand: string) {
 
 export function PricingCatalog() {
   const [query, setQuery] = useState("");
+  const [showTop, setShowTop] = useState(false);
   const deferredQuery = useDeferredValue(query.trim().toLowerCase());
+
+  useEffect(() => {
+    const onScroll = () => setShowTop(window.scrollY > 480);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  function scrollToTop() {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+  }
 
   const filtered = useMemo(
     () =>
@@ -212,8 +225,34 @@ export function PricingCatalog() {
           >
             Back to studio
           </a>
+          <button
+            type="button"
+            onClick={scrollToTop}
+            className="text-[13px] tracking-[0.04em] text-ink-muted underline decoration-line underline-offset-4 transition-colors hover:text-ink hover:decoration-ink"
+          >
+            Back to top
+          </button>
         </div>
       </div>
+      {showTop ? (
+        <button
+          type="button"
+          onClick={scrollToTop}
+          aria-label="Back to top"
+          className="fixed right-5 bottom-[max(1.25rem,env(safe-area-inset-bottom))] z-30 flex h-11 w-11 items-center justify-center border border-white/15 bg-bg/35 text-ink/80 backdrop-blur-sm"
+        >
+          <svg
+            viewBox="0 0 16 16"
+            aria-hidden
+            className="h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.25"
+          >
+            <path d="M8 12.5V3.5M8 3.5 4.5 7M8 3.5 11.5 7" />
+          </svg>
+        </button>
+      ) : null}
     </div>
   );
 }
