@@ -64,7 +64,7 @@ export function Hero() {
           </p>
           <div className="animate-rise delay-3 mt-10 flex flex-wrap items-center gap-6">
             <a
-              href="#browse"
+              href="#request"
               className="inline-flex items-center bg-white px-7 py-3.5 text-[13px] tracking-[0.08em] text-[#0a0a0a] transition-opacity hover:opacity-90"
             >
               Protect your watch

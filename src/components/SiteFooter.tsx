@@ -25,11 +25,11 @@ export function SiteFooter() {
             <a href="/#zones" className="hover:text-ink">
               Coverage
             </a>
-            <a href="/#browse" className="hover:text-ink">
-              Browse
-            </a>
             <a href="/pricing" className="hover:text-ink">
               Pricing
+            </a>
+            <a href="/sourcing" className="hover:text-ink">
+              Sourcing
             </a>
             <a href="/qa" className="hover:text-ink">
               Q&A

@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { faqItems } from "@/data/faq";
+import { faqItems, type FaqItem } from "@/data/faq";
 
-export function FaqList() {
+export function FaqList({ items = faqItems }: { items?: FaqItem[] }) {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
     <div className="border-t border-line">
-      {faqItems.map((item, i) => {
+      {items.map((item, i) => {
         const isOpen = open === i;
         return (
           <div key={item.question} className="border-b border-line">

@@ -6,8 +6,8 @@ import { WHATSAPP_DISPLAY, WHATSAPP_HREF } from "@/data/contact";
 const links = [
   { href: "/#protect", label: "Protect" },
   { href: "/#zones", label: "Coverage" },
-  { href: "/#browse", label: "Browse" },
   { href: "/pricing", label: "Pricing" },
+  { href: "/sourcing", label: "Sourcing" },
   { href: "/qa", label: "Q&A" },
 ];
 
