@@ -13,14 +13,14 @@ import {
   type PricingItem,
 } from "@/data/pricing";
 
+const collapsedBrands = new Set(["Rolex"]);
+
 function matchesQuery(item: PricingItem, query: string) {
-  if (!query) return true;
   const hay = `${item.label} ${item.size ?? ""}`.toLowerCase();
   return hay.includes(query);
 }
 
 function filterBrand(brand: PricingBrand, query: string): PricingFamily[] {
-  if (!query) return brand.families;
   return brand.families
     .map((family) => ({
       ...family,
@@ -29,17 +29,46 @@ function filterBrand(brand: PricingBrand, query: string): PricingFamily[] {
     .filter((family) => family.items.length > 0);
 }
 
-function brandSlug(brand: string) {
-  return brand
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
+function familyKey(brand: string, family: string) {
+  return `${brand}::${family}`;
+}
+
+function PriceRows({ items }: { items: PricingItem[] }) {
+  return (
+    <ul>
+      {items.map((item) => (
+        <li
+          key={`${item.label}-${item.size ?? ""}-${item.price}`}
+          className="flex items-baseline gap-3 py-2.5"
+        >
+          <div className="min-w-0 shrink">
+            <p className="text-[15px] tracking-[-0.01em] text-ink">
+              {item.label}
+              {item.size ? (
+                <span className="text-ink-muted"> ({item.size})</span>
+              ) : null}
+            </p>
+          </div>
+          <span
+            aria-hidden
+            className="mb-1 min-w-8 flex-1 border-b border-dotted border-line"
+          />
+          <p className="shrink-0 text-[15px] tabular-nums tracking-[-0.01em] text-ink">
+            {formatPrice(item.price)}
+          </p>
+        </li>
+      ))}
+    </ul>
+  );
 }
 
 export function PricingCatalog() {
   const [query, setQuery] = useState("");
+  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
+  const [openFamilies, setOpenFamilies] = useState<Set<string>>(() => new Set());
   const [showTop, setShowTop] = useState(false);
   const deferredQuery = useDeferredValue(query.trim().toLowerCase());
+  const searching = deferredQuery.length > 0;
 
   useEffect(() => {
     const onScroll = () => setShowTop(window.scrollY > 480);
@@ -53,20 +82,43 @@ export function PricingCatalog() {
     window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
   }
 
-  const filtered = useMemo(
-    () =>
-      pricingBrands
+  function chooseBrand(brand: string) {
+    setSelectedBrand(brand);
+    setQuery("");
+  }
+
+  function toggleFamily(key: string) {
+    setOpenFamilies((current) => {
+      const next = new Set(current);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }
+
+  const visible = useMemo(() => {
+    if (searching) {
+      return pricingBrands
         .map((brand) => ({
           brand,
           families: filterBrand(brand, deferredQuery),
         }))
-        .filter((entry) => entry.families.length > 0),
-    [deferredQuery],
+        .filter((entry) => entry.families.length > 0);
+    }
+    if (!selectedBrand) return [];
+    const brand = pricingBrands.find((item) => item.brand === selectedBrand);
+    if (!brand) return [];
+    return [{ brand, families: brand.families }];
+  }, [deferredQuery, searching, selectedBrand]);
+
+  const totalVisible = visible.reduce(
+    (sum, entry) =>
+      sum + entry.families.reduce((count, family) => count + family.items.length, 0),
+    0,
   );
 
-  const totalVisible = filtered.reduce(
-    (sum, entry) =>
-      sum + entry.families.reduce((s, family) => s + family.items.length, 0),
+  const catalogCount = pricingBrands.reduce(
+    (sum, brand) => sum + brandItemCount(brand),
     0,
   );
 
@@ -78,38 +130,49 @@ export function PricingCatalog() {
           <input
             type="search"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(event) => setQuery(event.target.value)}
             placeholder="Search reference…"
             className="field text-[15px]"
             autoComplete="off"
           />
         </label>
         <p className="text-[12px] tracking-[0.06em] text-ink-muted">
-          {deferredQuery
-            ? `${totalVisible} matches`
-            : `${pricingBrands.reduce((s, b) => s + brandItemCount(b), 0)} references`}
+          {searching
+            ? `${totalVisible} ${totalVisible === 1 ? "match" : "matches"}`
+            : `${catalogCount} references`}
         </p>
       </div>
 
-      {!deferredQuery ? (
-        <nav
-          aria-label="Maisons"
-          className="mt-8 flex flex-wrap gap-x-6 gap-y-3 border-b border-line pb-8"
-        >
-          {pricingBrands.map((brand) => (
-            <a
+      <nav
+        aria-label="Maisons"
+        className="-mx-6 mt-8 flex gap-x-6 overflow-x-auto border-b border-line px-6 pb-8 [scrollbar-width:none] md:-mx-10 md:px-10 [&::-webkit-scrollbar]:hidden"
+      >
+        {pricingBrands.map((brand) => {
+          const selected = selectedBrand === brand.brand && !searching;
+          return (
+            <button
               key={brand.brand}
-              href={`#${brandSlug(brand.brand)}`}
-              className="text-[13px] tracking-[0.06em] text-ink-muted uppercase transition-colors hover:text-ink"
+              type="button"
+              aria-pressed={selected}
+              onClick={(event) => {
+                chooseBrand(brand.brand);
+                event.currentTarget.scrollIntoView({
+                  inline: "nearest",
+                  block: "nearest",
+                });
+              }}
+              className={`shrink-0 whitespace-nowrap text-[13px] tracking-[0.06em] uppercase transition-colors ${
+                selected ? "text-ink" : "text-ink-muted hover:text-ink"
+              }`}
             >
               {brand.brand}
-            </a>
-          ))}
-        </nav>
-      ) : null}
+            </button>
+          );
+        })}
+      </nav>
 
       <div className="mt-12 space-y-20">
-        {filtered.length === 0 ? (
+        {searching && visible.length === 0 ? (
           <p className="text-[15px] text-ink-muted">
             No references match “{query.trim()}”. Try another reference, or{" "}
             <a
@@ -120,69 +183,74 @@ export function PricingCatalog() {
             </a>
             .
           </p>
-        ) : (
-          filtered.map(({ brand, families }) => {
-            const showFamilyHeaders =
-              families.length > 1 ||
-              (families[0] && families[0].name !== "References");
+        ) : null}
 
-            return (
-              <section
-                key={brand.brand}
-                id={brandSlug(brand.brand)}
-                className="scroll-mt-28"
-              >
-                <div className="flex items-baseline justify-between gap-4 border-b border-line pb-4">
-                  <h2 className="font-display text-[clamp(1.5rem,3vw,2rem)] font-medium tracking-[-0.02em]">
-                    {brand.brand}
-                  </h2>
-                  <p className="text-[12px] tracking-[0.06em] text-ink-muted">
-                    {families.reduce((s, f) => s + f.items.length, 0)} refs
-                  </p>
-                </div>
+        {!searching && !selectedBrand ? (
+          <p className="text-[15px] text-ink-muted">Choose a brand.</p>
+        ) : null}
 
-                <div className="mt-8 space-y-10">
-                  {families.map((family) => (
-                    <div key={`${brand.brand}-${family.name}`}>
+        {visible.map(({ brand, families }) => {
+          const collapseFamilies = collapsedBrands.has(brand.brand) && !searching;
+          const refCount = families.reduce(
+            (sum, family) => sum + family.items.length,
+            0,
+          );
+          const showFamilyHeaders =
+            families.length > 1 ||
+            (families[0] && families[0].name !== "References");
+
+          return (
+            <section key={brand.brand}>
+              <div className="flex items-baseline justify-between gap-4 border-b border-line pb-4">
+                <h2 className="font-display text-[clamp(1.5rem,3vw,2rem)] font-medium tracking-[-0.02em]">
+                  {brand.brand}
+                </h2>
+                <p className="text-[12px] tracking-[0.06em] text-ink-muted">
+                  {refCount} {refCount === 1 ? "ref" : "refs"}
+                </p>
+              </div>
+
+              <div className="mt-8 space-y-10">
+                {families.map((family) => {
+                  const key = familyKey(brand.brand, family.name);
+                  const open = !collapseFamilies || openFamilies.has(key);
+
+                  return (
+                    <div key={key}>
                       {showFamilyHeaders ? (
-                        <h3 className="text-[12px] font-medium tracking-[0.18em] text-ink-muted uppercase">
-                          {family.name}
-                        </h3>
-                      ) : null}
-                      <ul className={showFamilyHeaders ? "mt-4" : undefined}>
-                        {family.items.map((item) => (
-                          <li
-                            key={`${item.label}-${item.size ?? ""}-${item.price}`}
-                            className="flex items-baseline gap-3 py-2.5"
+                        collapseFamilies ? (
+                          <button
+                            type="button"
+                            aria-expanded={open}
+                            onClick={() => toggleFamily(key)}
+                            className="flex w-full items-baseline justify-between gap-4 text-left"
                           >
-                            <div className="min-w-0 shrink">
-                              <p className="text-[15px] tracking-[-0.01em] text-ink">
-                                {item.label}
-                                {item.size ? (
-                                  <span className="text-ink-muted">
-                                    {" "}
-                                    ({item.size})
-                                  </span>
-                                ) : null}
-                              </p>
-                            </div>
-                            <span
-                              aria-hidden
-                              className="mb-1 min-w-8 flex-1 border-b border-dotted border-line"
-                            />
-                            <p className="shrink-0 text-[15px] tabular-nums tracking-[-0.01em] text-ink">
-                              {formatPrice(item.price)}
-                            </p>
-                          </li>
-                        ))}
-                      </ul>
+                            <span className="text-[12px] font-medium tracking-[0.18em] text-ink-muted uppercase">
+                              {family.name}
+                            </span>
+                            <span className="flex items-baseline gap-4 text-[12px] tracking-[0.12em] text-ink-muted">
+                              <span>{family.items.length}</span>
+                              <span aria-hidden>{open ? "—" : "+"}</span>
+                            </span>
+                          </button>
+                        ) : (
+                          <h3 className="text-[12px] font-medium tracking-[0.18em] text-ink-muted uppercase">
+                            {family.name}
+                          </h3>
+                        )
+                      ) : null}
+                      {open ? (
+                        <div className={showFamilyHeaders ? "mt-4" : undefined}>
+                          <PriceRows items={family.items} />
+                        </div>
+                      ) : null}
                     </div>
-                  ))}
-                </div>
-              </section>
-            );
-          })
-        )}
+                  );
+                })}
+              </div>
+            </section>
+          );
+        })}
       </div>
 
       <div className="mt-20 border-t border-line pt-12">
@@ -191,10 +259,7 @@ export function PricingCatalog() {
         </p>
         <ul className="mt-6">
           {pricingExtras.map((extra) => (
-            <li
-              key={extra.label}
-              className="flex items-baseline gap-3 py-2.5"
-            >
+            <li key={extra.label} className="flex items-baseline gap-3 py-2.5">
               <p className="min-w-0 shrink text-[15px] text-ink">{extra.label}</p>
               <span
                 aria-hidden
