@@ -1,7 +1,16 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ease, pinnedProgress, span, useScrollFrame } from "@/lib/scrollFrame";
+
+function heroSource() {
+  if (typeof window === "undefined") return "/video/hero.mp4";
+  const narrow = window.matchMedia("(max-width: 900px)").matches;
+  const saveData =
+    "connection" in navigator &&
+    Boolean((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData);
+  return narrow || saveData ? "/video/hero-mobile.mp4" : "/video/hero.mp4";
+}
 
 export function Hero() {
   const track = useRef<HTMLElement>(null);
@@ -9,10 +18,15 @@ export function Hero() {
   const plane = useRef<HTMLDivElement>(null);
   const veil = useRef<HTMLDivElement>(null);
   const copy = useRef<HTMLDivElement>(null);
+  const [src, setSrc] = useState<string | null>(null);
+
+  useEffect(() => {
+    setSrc(heroSource());
+  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !src) return;
 
     video.muted = true;
     video.defaultMuted = true;
@@ -38,7 +52,7 @@ export function Hero() {
       document.removeEventListener("visibilitychange", tryPlay);
       window.removeEventListener("touchstart", tryPlay);
     };
-  }, []);
+  }, [src]);
 
   useScrollFrame((reduced) => {
     const root = track.current;
@@ -57,21 +71,29 @@ export function Hero() {
       <div className="scroll-sticky sticky top-0 h-[100svh] overflow-hidden">
       {/* Full-bleed video plane */}
       <div ref={plane} className="absolute inset-0 will-change-transform">
-        <video
-          ref={videoRef}
-          className="hero-video absolute inset-0 h-full w-full object-cover object-center"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          poster="/images/hero-poster.jpg"
-          controls={false}
-          disablePictureInPicture
-          aria-label="RX8 Studio watch protection film"
-        >
-          <source src="/video/hero.mp4" type="video/mp4" />
-        </video>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/hero-poster.jpg"
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover object-center"
+        />
+        {src ? (
+          <video
+            key={src}
+            ref={videoRef}
+            className="hero-video absolute inset-0 h-full w-full object-cover object-center"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster="/images/hero-poster.jpg"
+            controls={false}
+            disablePictureInPicture
+            src={src}
+            aria-label="RX8 Studio watch protection film"
+          />
+        ) : null}
         {/* Soft veil so type stays readable — light gallery, not heavy blackout */}
         <div
           aria-hidden

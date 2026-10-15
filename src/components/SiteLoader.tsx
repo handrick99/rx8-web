@@ -2,16 +2,16 @@
 
 import { useEffect, useState } from "react";
 
-const ASSETS = [
-  "/video/hero.mp4",
+const IMAGE_ASSETS = [
+  "/images/hero-poster.jpg",
   "/images/coverage-bezel.jpg",
   "/images/coverage-bracelet.jpg",
   "/images/coverage-clasp.jpg",
   "/images/installation-hands.jpg",
 ] as const;
 
-const MIN_MS = 1400;
-const MAX_MS = 10000;
+const MIN_MS = 900;
+const MAX_MS = 16000;
 
 function loadImage(src: string) {
   return new Promise<void>((resolve) => {
@@ -22,23 +22,46 @@ function loadImage(src: string) {
   });
 }
 
-function loadVideo(src: string) {
-  return new Promise<void>((resolve) => {
-    const video = document.createElement("video");
-    video.muted = true;
-    video.preload = "auto";
-    video.playsInline = true;
+function isHeroPlaying(video: HTMLVideoElement) {
+  return !video.paused && video.readyState >= 2 && video.currentTime > 0.05;
+}
 
-    const finish = () => {
-      video.removeAttribute("src");
-      video.load();
+function waitForHeroPlaying(timeoutMs: number) {
+  return new Promise<void>((resolve) => {
+    let finished = false;
+    let attached: HTMLVideoElement | null = null;
+
+    const done = () => {
+      if (finished) return;
+      finished = true;
+      window.clearInterval(poll);
+      window.clearTimeout(limit);
+      if (attached) attached.removeEventListener("playing", onPlaying);
       resolve();
     };
 
-    video.addEventListener("canplaythrough", finish, { once: true });
-    video.addEventListener("error", finish, { once: true });
-    video.src = src;
-    video.load();
+    const onPlaying = () => done();
+
+    const nudge = (video: HTMLVideoElement) => {
+      if (attached !== video) {
+        if (attached) attached.removeEventListener("playing", onPlaying);
+        attached = video;
+        video.addEventListener("playing", onPlaying);
+      }
+      video.muted = true;
+      video.defaultMuted = true;
+      video.playsInline = true;
+      const play = video.play();
+      if (play) play.catch(() => {});
+      if (isHeroPlaying(video)) done();
+    };
+
+    const poll = window.setInterval(() => {
+      const video = document.querySelector<HTMLVideoElement>(".hero-video");
+      if (video) nudge(video);
+    }, 100);
+
+    const limit = window.setTimeout(done, timeoutMs);
   });
 }
 
@@ -52,13 +75,14 @@ export function SiteLoader() {
     const started = performance.now();
     let settled = false;
     let loaded = 0;
+    const total = IMAGE_ASSETS.length + 1;
 
     document.documentElement.classList.remove("is-ready");
     document.documentElement.classList.add("is-loading");
 
     const mark = () => {
       loaded += 1;
-      setProgress(loaded / ASSETS.length);
+      setProgress(Math.min(1, loaded / total));
     };
 
     const reveal = () => {
@@ -68,27 +92,28 @@ export function SiteLoader() {
       document.documentElement.classList.add("is-ready");
       setProgress(1);
       setLeaving(true);
-      window.setTimeout(
-        () => setGone(true),
-        reduce ? 120 : 900,
-      );
+      window.setTimeout(() => setGone(true), reduce ? 120 : 700);
     };
 
     const waitMin = async () => {
       const elapsed = performance.now() - started;
-      const remain = Math.max(0, (reduce ? 200 : MIN_MS) - elapsed);
+      const remain = Math.max(0, (reduce ? 120 : MIN_MS) - elapsed);
       if (remain) await new Promise((r) => window.setTimeout(r, remain));
     };
 
     const run = async () => {
-      const jobs = ASSETS.map((src) =>
-        (src.endsWith(".mp4") ? loadVideo(src) : loadImage(src)).then(mark),
-      );
+      await Promise.all(IMAGE_ASSETS.map((src) => loadImage(src).then(mark)));
 
-      await Promise.race([
-        Promise.all(jobs).then(waitMin),
-        new Promise<void>((r) => window.setTimeout(r, reduce ? 400 : MAX_MS)),
-      ]);
+      if (reduce) {
+        mark();
+        await waitMin();
+        reveal();
+        return;
+      }
+
+      await waitForHeroPlaying(MAX_MS);
+      mark();
+      await waitMin();
       reveal();
     };
 
