@@ -33,28 +33,29 @@ export function arriveProgress(el: HTMLElement) {
   return ease(clamp(1 - top / (window.innerHeight * 0.9), 0, 1));
 }
 
-/** Phones and reduced-motion: skip scroll-linked animation. */
-export function motionReduced() {
-  return (
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-    window.matchMedia("(max-width: 767px)").matches
-  );
+export type MotionMode = "full" | "lite" | "off";
+
+/** Desktop keeps full motion. Phones get simple fades. Reduced-motion turns it off. */
+export function motionMode(): MotionMode {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return "off";
+  if (window.matchMedia("(max-width: 767px)").matches) return "lite";
+  return "full";
 }
 
-export function useScrollFrame(run: (reduced: boolean) => void) {
+export function motionReduced() {
+  return motionMode() !== "full";
+}
+
+export function useScrollFrame(run: (mode: MotionMode) => void) {
   const runRef = useRef(run);
   runRef.current = run;
 
   useEffect(() => {
-    const tick = () => runRef.current(motionReduced());
+    const tick = () => runRef.current(motionMode());
     tick();
 
     let frame = 0;
     const onScroll = () => {
-      if (motionReduced()) {
-        tick();
-        return;
-      }
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(tick);
     };

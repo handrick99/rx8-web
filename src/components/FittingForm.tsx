@@ -7,7 +7,7 @@ import {
   WHATSAPP_DISPLAY,
   WHATSAPP_HREF,
 } from "@/data/contact";
-import { enterProgress, useScrollFrame } from "@/lib/scrollFrame";
+import { enterProgress, useScrollFrame, type MotionMode } from "@/lib/scrollFrame";
 
 type Prefill = {
   brand?: string;
@@ -23,15 +23,25 @@ export function FittingForm({ prefill }: { prefill?: Prefill }) {
       ? `${prefill.brand} ${prefill.model}`
       : prefill?.brand || "";
 
-  useScrollFrame((reduced) => {
+  useScrollFrame((mode: MotionMode) => {
     if (intro.current) {
-      const shown = reduced ? 1 : enterProgress(intro.current);
-      intro.current.style.opacity = String(shown);
-      intro.current.style.transform = `translate3d(0, ${(1 - shown) * 12}px, 0)`;
+      if (mode === "off") {
+        intro.current.style.opacity = "1";
+        intro.current.style.transform = "none";
+      } else {
+        const shown = enterProgress(intro.current);
+        intro.current.style.opacity = String(shown);
+        intro.current.style.transform = `translate3d(0, ${(1 - shown) * 12}px, 0)`;
+      }
     }
     fields.current.forEach((node, index) => {
       if (!node) return;
-      const shown = reduced ? 1 : enterProgress(node, index * 16);
+      if (mode === "off") {
+        node.style.opacity = "1";
+        node.style.transform = "none";
+        return;
+      }
+      const shown = enterProgress(node, mode === "lite" ? index * 10 : index * 16);
       node.style.opacity = String(shown);
       node.style.transform = `translate3d(0, ${(1 - shown) * 10}px, 0)`;
     });

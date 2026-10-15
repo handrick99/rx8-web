@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { enterProgress, useScrollFrame } from "@/lib/scrollFrame";
+import { enterProgress, useScrollFrame, type MotionMode } from "@/lib/scrollFrame";
 
 const zones = [
   {
@@ -29,14 +29,23 @@ export function ProtectionZones() {
   const figures = useRef<Array<HTMLElement | null>>([]);
   const medias = useRef<Array<HTMLDivElement | null>>([]);
 
-  useScrollFrame((reduced) => {
+  useScrollFrame((mode: MotionMode) => {
     figures.current.forEach((figure, index) => {
       const media = medias.current[index];
       if (!figure || !media) return;
-      const shown = reduced ? 1 : enterProgress(figure, index * 56);
+      if (mode === "off") {
+        figure.style.opacity = "1";
+        figure.style.transform = "none";
+        media.style.transform = "none";
+        return;
+      }
+      const lead = mode === "lite" ? index * 28 : index * 56;
+      const shown = enterProgress(figure, lead);
+      const lift = mode === "lite" ? 10 : 16;
       figure.style.opacity = String(shown);
-      figure.style.transform = `translate3d(0, ${(1 - shown) * 16}px, 0)`;
-      media.style.transform = `scale(${1.035 - shown * 0.035})`;
+      figure.style.transform = `translate3d(0, ${(1 - shown) * lift}px, 0)`;
+      media.style.transform =
+        mode === "full" ? `scale(${1.035 - shown * 0.035})` : "none";
     });
   });
 
