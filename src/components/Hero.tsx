@@ -15,12 +15,29 @@ export function Hero() {
     if (!video) return;
 
     video.muted = true;
-    const play = video.play();
-    if (play) {
-      play.catch(() => {
-        // Autoplay blocked — muted loop still preferred on next gesture
-      });
-    }
+    video.defaultMuted = true;
+    video.setAttribute("muted", "");
+    video.playsInline = true;
+    video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "");
+
+    const tryPlay = () => {
+      const play = video.play();
+      if (play) play.catch(() => {});
+    };
+
+    tryPlay();
+    video.addEventListener("loadeddata", tryPlay);
+    video.addEventListener("canplay", tryPlay);
+    document.addEventListener("visibilitychange", tryPlay);
+    window.addEventListener("touchstart", tryPlay, { once: true, passive: true });
+
+    return () => {
+      video.removeEventListener("loadeddata", tryPlay);
+      video.removeEventListener("canplay", tryPlay);
+      document.removeEventListener("visibilitychange", tryPlay);
+      window.removeEventListener("touchstart", tryPlay);
+    };
   }, []);
 
   useScrollFrame((reduced) => {
@@ -42,12 +59,15 @@ export function Hero() {
       <div ref={plane} className="absolute inset-0 will-change-transform">
         <video
           ref={videoRef}
-          className="absolute inset-0 h-full w-full object-cover object-center"
+          className="hero-video absolute inset-0 h-full w-full object-cover object-center"
           autoPlay
           muted
           loop
           playsInline
           preload="auto"
+          poster="/images/hero-poster.jpg"
+          controls={false}
+          disablePictureInPicture
           aria-label="RX8 Studio watch protection film"
         >
           <source src="/video/hero.mp4" type="video/mp4" />
