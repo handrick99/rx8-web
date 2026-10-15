@@ -473,3 +473,19 @@ export function brandItemCount(brand: PricingBrand): number {
   return brand.families.reduce((sum, family) => sum + family.items.length, 0);
 }
 
+export function catalogInventory() {
+  const brands = new Set(
+    pricingBrands.flatMap((entry) =>
+      entry.brand
+        .split("·")
+        .map((name) => name.trim())
+        .filter(Boolean),
+    ),
+  );
+  const models = pricingBrands.reduce(
+    (sum, entry) => sum + brandItemCount(entry),
+    0,
+  );
+  return { brands: brands.size, models };
+}
+

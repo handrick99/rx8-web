@@ -1,77 +1,114 @@
-import Image from "next/image";
-import { Reveal } from "@/components/Reveal";
+"use client";
 
-const steps = [
-  {
-    n: "01",
-    title: "Specify",
-    text: "Brand, model, reference.",
-  },
-  {
-    n: "02",
-    title: "Cut",
-    text: "Film tailored to your watch’s geometry.",
-  },
-  {
-    n: "03",
-    title: "Fit",
-    text: "Installed in person so every edge seats clean.",
-  },
-];
+import { useRef } from "react";
+import {
+  arriveProgress,
+  ease,
+  pinnedProgress,
+  span,
+  useScrollFrame,
+} from "@/lib/scrollFrame";
 
-export function Installation() {
+export function Installation({
+  brands,
+  models,
+}: {
+  brands: number;
+  models: number;
+}) {
+  const track = useRef<HTMLElement>(null);
+  const veil = useRef<HTMLDivElement>(null);
+  const factEls = useRef<Array<HTMLElement | null>>([]);
+  const facts = [
+    { value: String(brands), label: "Brands" },
+    { value: String(models), label: "Models" },
+  ];
+
+  useScrollFrame((reduced) => {
+    const root = track.current;
+    if (!root || !veil.current) return;
+    const progress = reduced ? 1 : pinnedProgress(root);
+    const veilOpacity = reduced
+      ? 0
+      : Math.max(1 - arriveProgress(root), ease(span(progress, 0.78, 1)));
+    veil.current.style.opacity = String(veilOpacity);
+
+    factEls.current.forEach((node, index) => {
+      if (!node) return;
+      const shown = reduced
+        ? 1
+        : ease(span(progress, 0.04 + index * 0.1, 0.28 + index * 0.1));
+      node.style.opacity = String(shown);
+      node.style.transform = `translate3d(0, ${(1 - shown) * 12}px, 0)`;
+    });
+  });
+
   return (
-    <section id="fitting" className="min-h-[100svh] bg-bg-soft text-ink">
-      <div className="mx-auto grid min-h-[100svh] max-w-[1400px] grid-cols-1 md:grid-cols-2">
-        <div className="flex flex-col justify-center px-6 py-16 md:px-10">
-          <Reveal>
-            <p className="text-[11px] font-medium tracking-[0.22em] text-ink-muted uppercase">
+    <section
+      id="fitting"
+      ref={track}
+      className="install-track relative bg-bg text-white"
+    >
+      <div className="scroll-sticky sticky top-0 h-[100svh] overflow-hidden">
+        <div className="absolute inset-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/installation-hands.jpg"
+            alt="Fitting protection film onto a watch"
+            className="absolute inset-0 h-full w-full object-cover object-[center_42%]"
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent"
+          />
+        </div>
+        <div
+          ref={veil}
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-20 bg-black"
+          style={{ opacity: 1 }}
+        />
+
+        <div className="relative z-10 mx-auto flex h-full max-w-[1400px] items-end px-6 py-16 md:px-10">
+          <div className="w-full max-w-[34rem]">
+            <p className="text-[11px] font-medium tracking-[0.22em] text-white/70 uppercase">
               Installation
             </p>
             <h2 className="font-display mt-5 max-w-[14ch] text-[clamp(2rem,4vw,3.25rem)] font-semibold leading-[1.05] tracking-[-0.03em]">
               Fitted like the watch was made.
             </h2>
-            <p className="mt-6 max-w-[42ch] text-[15px] leading-relaxed text-ink-muted">
-              RX8 is built around in-person installation. Each piece is treated as
-              a finished object — measured, cut, and applied with the same care as
-              the watch itself.
-            </p>
-          </Reveal>
-
-          <Reveal delay={160}>
-            <ol className="mt-14 space-y-8 pt-2">
-              {steps.map((step) => (
-                <li key={step.n} className="grid grid-cols-[3rem_1fr] gap-4">
-                  <span className="pt-1 text-[12px] tracking-[0.12em] text-ink-muted">
-                    {step.n}
-                  </span>
-                  <div>
-                    <h3 className="font-display text-[18px] font-medium tracking-[-0.01em]">
-                      {step.title}
-                    </h3>
-                    <p className="mt-2 text-[15px] text-ink-muted">{step.text}</p>
-                  </div>
-                </li>
+            <div className="mt-10 flex gap-12">
+              {facts.map((fact, index) => (
+                <div
+                  key={fact.label}
+                  ref={(node) => {
+                    factEls.current[index] = node;
+                  }}
+                  className="will-change-transform"
+                  style={{ opacity: 0, transform: "translate3d(0, 12px, 0)" }}
+                >
+                  <p className="font-display text-[clamp(2.5rem,5vw,3.5rem)] font-semibold leading-none tracking-[-0.03em]">
+                    {fact.value}
+                  </p>
+                  <p className="mt-3 text-[11px] tracking-[0.18em] text-white/70 uppercase">
+                    {fact.label}
+                  </p>
+                </div>
               ))}
-            </ol>
-          </Reveal>
-        </div>
+            </div>
 
-        <Reveal className="relative min-h-[50svh] h-full w-full md:min-h-full" delay={120}>
-          <div className="relative min-h-[50svh] h-full w-full md:absolute md:inset-0 md:min-h-full">
-            <Image
-              src="/images/installation-watch.jpg"
-              alt="Audemars Piguet Royal Oak chronograph"
-              fill
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover object-center"
-            />
-            <div
-              aria-hidden
-              className="absolute inset-0 bg-gradient-to-r from-bg-soft/70 to-transparent max-md:bg-gradient-to-t max-md:from-bg-soft/60 max-md:via-transparent"
-            />
+            <a
+              href="#request"
+              ref={(node) => {
+                factEls.current[2] = node;
+              }}
+              className="mt-10 inline-block text-[15px] text-white underline decoration-white/35 underline-offset-4 will-change-transform hover:decoration-white"
+              style={{ opacity: 0, transform: "translate3d(0, 12px, 0)" }}
+            >
+              Tailor film for any model
+            </a>
           </div>
-        </Reveal>
+        </div>
       </div>
     </section>
   );

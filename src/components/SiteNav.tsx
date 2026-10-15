@@ -4,7 +4,7 @@ import { useState } from "react";
 import { WHATSAPP_DISPLAY, WHATSAPP_HREF } from "@/data/contact";
 
 const links = [
-  { href: "/#protect", label: "Protect" },
+  { href: "/protect", label: "Protect" },
   { href: "/#zones", label: "Coverage" },
   { href: "/pricing", label: "Pricing" },
   { href: "/sourcing", label: "Sourcing" },

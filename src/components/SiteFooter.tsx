@@ -19,7 +19,7 @@ export function SiteFooter() {
             </p>
           </div>
           <div className="flex flex-wrap gap-x-8 gap-y-3 text-[13px] text-ink-muted">
-            <a href="/#protect" className="hover:text-ink">
+            <a href="/protect" className="hover:text-ink">
               Protect
             </a>
             <a href="/#zones" className="hover:text-ink">
