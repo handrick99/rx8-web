@@ -189,32 +189,67 @@ body {
   }
 }
 
-.animate-rise {
+.animate-rise,
+.animate-fade,
+.animate-image {
+  opacity: 0;
+}
+
+html.is-ready .animate-rise {
   animation: rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.animate-fade {
+html.is-ready .animate-fade {
   animation: fade 1s ease both;
 }
 
-.animate-image {
+html.is-ready .animate-image {
   animation: image-settle 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.delay-1 {
+html.is-ready .delay-1 {
   animation-delay: 0.12s;
 }
 
-.delay-2 {
+html.is-ready .delay-2 {
   animation-delay: 0.24s;
 }
 
-.delay-3 {
+html.is-ready .delay-3 {
   animation-delay: 0.36s;
 }
 
-.delay-4 {
+html.is-ready .delay-4 {
   animation-delay: 0.48s;
+}
+
+html.is-loading,
+html.is-loading body {
+  overflow: hidden;
+}
+
+.site-loader {
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.site-loader.is-leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.site-loader-bar {
+  transform-origin: left center;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-loader {
+    transition-duration: 0.15s;
+  }
+
+  .site-loader-bar {
+    transition-duration: 0.15s;
+  }
 }
 
 .site-grain {

@@ -29,5 +29,6 @@ export default function RootLayout({
     <html lang="en" className={`${syne.variable} ${outfit.variable} h-full`}>
       <body className="min-h-full bg-bg text-ink antialiased">{children}</body>
     </html>
+   
   );
 }

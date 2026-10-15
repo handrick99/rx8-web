@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import { enterProgress, useScrollFrame } from "@/lib/scrollFrame";
 
@@ -28,22 +28,6 @@ const zones = [
 export function ProtectionZones() {
   const figures = useRef<Array<HTMLElement | null>>([]);
   const medias = useRef<Array<HTMLDivElement | null>>([]);
-  const [open, setOpen] = useState<(typeof zones)[number]["id"] | null>(null);
-  const zone = zones.find((item) => item.id === open);
-
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(null);
-    };
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = previous;
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [open]);
 
   useScrollFrame((reduced) => {
     figures.current.forEach((figure, index) => {
@@ -65,16 +49,12 @@ export function ProtectionZones() {
 
         <div className="mt-8 grid gap-3 md:mt-10 md:grid-cols-3 md:gap-4">
           {zones.map((zone, index) => (
-            <button
+            <figure
               key={zone.id}
-              type="button"
               ref={(node) => {
                 figures.current[index] = node;
               }}
-              aria-expanded={open === zone.id}
-              aria-label={`Zoom in on ${zone.title}`}
-              onClick={() => setOpen(zone.id)}
-              className="relative block aspect-4/5 w-full cursor-zoom-in overflow-hidden text-left will-change-transform"
+              className="group relative aspect-4/5 w-full overflow-hidden will-change-transform"
               style={{ opacity: 0, transform: "translate3d(0, 16px, 0)" }}
             >
               <div
@@ -84,45 +64,27 @@ export function ProtectionZones() {
                 className="absolute inset-0 will-change-transform"
                 style={{ transform: "scale(1.035)" }}
               >
-                <Image
-                  src={zone.image}
-                  alt={zone.alt}
-                  fill
-                  sizes="(min-width: 768px) 33vw, 100vw"
-                  className="object-cover object-center"
-                />
+                <div className="absolute inset-0 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-125">
+                  <Image
+                    src={zone.image}
+                    alt={zone.alt}
+                    fill
+                    sizes="(min-width: 768px) 33vw, 100vw"
+                    className="object-cover object-center"
+                  />
+                </div>
               </div>
               <div
                 aria-hidden
                 className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/70 to-transparent"
               />
-              <span className="absolute bottom-4 left-4 text-[11px] tracking-[0.18em] text-white uppercase md:bottom-5 md:left-5">
+              <figcaption className="absolute bottom-4 left-4 text-[11px] tracking-[0.18em] text-white uppercase md:bottom-5 md:left-5">
                 {zone.title}
-              </span>
-            </button>
+              </figcaption>
+            </figure>
           ))}
         </div>
       </div>
-
-      {zone ? (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label={zone.title}
-          className="fixed inset-0 z-50 cursor-zoom-out bg-black"
-          onClick={() => setOpen(null)}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={zone.image}
-            alt={zone.alt}
-            className="coverage-zoom h-full w-full object-contain"
-          />
-          <p className="pointer-events-none absolute bottom-6 left-6 text-[11px] tracking-[0.18em] text-white uppercase md:bottom-8 md:left-10">
-            {zone.title}
-          </p>
-        </div>
-      ) : null}
     </section>
   );
 }

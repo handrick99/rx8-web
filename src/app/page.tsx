@@ -3,6 +3,7 @@ import { Hero } from "@/components/Hero";
 import { Installation } from "@/components/Installation";
 import { ProtectionZones } from "@/components/ProtectionZones";
 import { SiteFooter } from "@/components/SiteFooter";
+import { SiteLoader } from "@/components/SiteLoader";
 import { SiteNav } from "@/components/SiteNav";
 import { catalogInventory } from "@/data/pricing";
 
@@ -11,6 +12,7 @@ export default function Home() {
 
   return (
     <>
+      <SiteLoader />
       <div className="site-grain" aria-hidden />
       <SiteNav />
       <main>
