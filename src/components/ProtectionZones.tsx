@@ -64,7 +64,7 @@ export function ProtectionZones() {
                 className="absolute inset-0 will-change-transform"
                 style={{ transform: "scale(1.035)" }}
               >
-                <div className="absolute inset-0 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-125">
+                <div className="absolute inset-0 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] md:group-hover:scale-125">
                   <Image
                     src={zone.image}
                     alt={zone.alt}

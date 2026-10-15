@@ -81,7 +81,11 @@ body {
   }
 }
 
-/* Pinned scroll frames: hero, installation */
+/* Pinned scroll frames: desktop only */
+.film-track {
+  height: 240vh;
+}
+
 .hero-track {
   height: 150vh;
 }
@@ -91,6 +95,10 @@ body {
 }
 
 @media (min-width: 768px) {
+  .film-track {
+    height: 280vh;
+  }
+
   .hero-track {
     height: 165vh;
   }
@@ -100,12 +108,14 @@ body {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (max-width: 767px), (prefers-reduced-motion: reduce) {
+  .film-track,
   .hero-track,
   .install-track {
     height: auto;
   }
 
+  .film-sticky,
   .scroll-sticky {
     position: relative;
     height: auto;
