@@ -13,8 +13,6 @@ import {
   type PricingItem,
 } from "@/data/pricing";
 
-const collapsedBrands = new Set(["Rolex"]);
-
 function matchesQuery(item: PricingItem, query: string) {
   const hay = `${item.label} ${item.size ?? ""}`.toLowerCase();
   return hay.includes(query);
@@ -190,7 +188,6 @@ export function PricingCatalog() {
         ) : null}
 
         {visible.map(({ brand, families }) => {
-          const collapseFamilies = collapsedBrands.has(brand.brand) && !searching;
           const refCount = families.reduce(
             (sum, family) => sum + family.items.length,
             0,
@@ -198,6 +195,7 @@ export function PricingCatalog() {
           const showFamilyHeaders =
             families.length > 1 ||
             (families[0] && families[0].name !== "References");
+          const collapseFamilies = !searching && showFamilyHeaders;
 
           return (
             <section key={brand.brand}>
