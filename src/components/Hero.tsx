@@ -148,7 +148,8 @@ export function Hero() {
             Invisible armor for watches built to last.
           </h1>
           <p className="animate-rise delay-2 mt-5 max-w-[34ch] text-[15px] leading-relaxed text-white/75">
-            Tailor-cut protection film. Nearly undetectable. Fitted in person.
+            Tailor-cut watch protection film. Nearly undetectable. Fitted in
+            person in Los Angeles.
           </p>
           <div className="animate-rise delay-3 mt-10 flex flex-wrap items-center gap-6">
             <a

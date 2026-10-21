@@ -2,17 +2,21 @@ import type { Metadata } from "next";
 import { PricingCatalog } from "@/components/PricingCatalog";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteNav } from "@/components/SiteNav";
-import { pricingIntro } from "@/data/pricing";
+import { JsonLd } from "@/components/JsonLd";
+import { catalogInventory, pricingIntro } from "@/data/pricing";
+import { pageMetadata } from "@/lib/metadata";
+import { pricingJsonLd } from "@/lib/structuredData";
 
-export const metadata: Metadata = {
-  title: "Pricing — RX8 Studio",
-  description:
-    "Watch protection film pricing by reference. Installation and one-year warranty included.",
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/pricing",
+  title: "Watch Protection Film Prices for Rolex, Patek Philippe and AP",
+  description: `Protection film prices for ${catalogInventory().models} watch references from Rolex, Patek Philippe, Audemars Piguet, Richard Mille, Vacheron Constantin and more. Installation and a one-year warranty included.`,
+});
 
 export default function PricingPage() {
   return (
     <>
+      <JsonLd data={pricingJsonLd()} />
       <div className="site-grain" aria-hidden />
       <SiteNav variant="solid" />
       <main className="bg-bg">

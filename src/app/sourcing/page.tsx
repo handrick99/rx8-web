@@ -4,12 +4,14 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SiteNav } from "@/components/SiteNav";
 import { SourcingInquiryForm } from "@/components/SourcingInquiryForm";
 import { sourcingFaq } from "@/data/sourcing-faq";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Watch Sourcing | RX8",
+export const metadata: Metadata = pageMetadata({
+  path: "/sourcing",
+  title: "Luxury Watch Sourcing",
   description:
     "Tell us the watch. We source it internationally, quote one landed price more competitive than local, and accept trade ins.",
-};
+});
 
 const steps = [
   {

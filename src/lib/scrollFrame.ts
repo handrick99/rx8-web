@@ -20,10 +20,10 @@ export function pinnedProgress(el: HTMLElement) {
 }
 
 /** How far a single element has risen into view. */
-export function enterProgress(el: HTMLElement, lead = 0) {
+export function enterProgress(el: HTMLElement, lead = 0, range = 0.85) {
   const start = window.innerHeight * 1.08 - lead;
   return ease(
-    clamp((start - el.getBoundingClientRect().top) / (window.innerHeight * 0.85), 0, 1),
+    clamp((start - el.getBoundingClientRect().top) / (window.innerHeight * range), 0, 1),
   );
 }
 

@@ -1,5 +1,9 @@
 import { Outfit, Syne } from "next/font/google";
 import type { Metadata } from "next";
+import { JsonLd } from "@/components/JsonLd";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from "@/data/site";
+import { pageMetadata } from "@/lib/metadata";
+import { businessJsonLd } from "@/lib/structuredData";
 import "./globals.css";
 
 const syne = Syne({
@@ -15,9 +19,20 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "RX8 Studio — Watch Protection Film",
-  description:
-    "Tailor-cut, nearly invisible protection film for luxury watches. Fitted in person.",
+  ...pageMetadata({ path: "/", title: SITE_TITLE, description: SITE_DESCRIPTION }),
+  metadataBase: new URL(SITE_URL),
+  title: { default: SITE_TITLE, template: `%s | ${SITE_NAME}` },
+  applicationName: SITE_NAME,
+  keywords: [
+    "watch protection film",
+    "watch PPF",
+    "Rolex protection film",
+    "Patek Philippe protection film",
+    "Audemars Piguet protection film",
+    "Richard Mille protection film",
+    "watch scratch protection",
+    "Los Angeles",
+  ],
 };
 
 export default function RootLayout({
@@ -27,7 +42,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${syne.variable} ${outfit.variable} h-full`}>
-      <body className="min-h-full bg-bg text-ink antialiased">{children}</body>
+      <body className="min-h-full bg-bg text-ink antialiased">
+        <JsonLd data={businessJsonLd()} />
+        {children}
+      </body>
     </html>
    
   );

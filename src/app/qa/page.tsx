@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { FaqList } from "@/components/FaqList";
+import { JsonLd } from "@/components/JsonLd";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteNav } from "@/components/SiteNav";
 import {
@@ -8,16 +9,20 @@ import {
   WHATSAPP_DISPLAY,
   WHATSAPP_HREF,
 } from "@/data/contact";
+import { pageMetadata } from "@/lib/metadata";
+import { faqJsonLd } from "@/lib/structuredData";
 
-export const metadata: Metadata = {
-  title: "Q&A — RX8 Studio",
+export const metadata: Metadata = pageMetadata({
+  path: "/qa",
+  title: "Watch Protection Film Questions and Answers",
   description:
-    "Answers on installation, care, water use, self-healing film, and warranty.",
-};
+    "How long watch protection film lasts, water use, self-healing, residue, care and warranty. Straight answers from RX8 Studio in Los Angeles.",
+});
 
 export default function QaPage() {
   return (
     <>
+      <JsonLd data={faqJsonLd()} />
       <div className="site-grain" aria-hidden />
       <SiteNav variant="solid" />
       <main className="bg-bg">
