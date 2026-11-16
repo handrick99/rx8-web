@@ -69,9 +69,9 @@ export function Installation({
     <section
       id="fitting"
       ref={track}
-      className="relative bg-black text-white md:install-track md:bg-bg"
+      className="install-track relative bg-black text-white md:bg-bg"
     >
-      <div className="relative md:scroll-sticky md:sticky md:top-0 md:h-[100svh] md:overflow-hidden">
+      <div className="scroll-sticky relative md:sticky md:top-0 md:h-[100svh] md:overflow-hidden">
         <div className="relative aspect-square overflow-hidden md:absolute md:inset-0 md:aspect-auto">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img

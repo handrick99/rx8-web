@@ -42,7 +42,11 @@ export function Hero() {
     video.setAttribute("playsinline", "");
     video.setAttribute("webkit-playsinline", "");
 
+    let cancelled = false;
+    let attempts = 0;
+
     const tryPlay = () => {
+      if (cancelled || (!video.paused && video.currentTime > 0)) return;
       const play = video.play();
       if (play) play.catch(() => {});
     };
@@ -50,14 +54,28 @@ export function Hero() {
     tryPlay();
     video.addEventListener("loadeddata", tryPlay);
     video.addEventListener("canplay", tryPlay);
+    video.addEventListener("canplaythrough", tryPlay);
     document.addEventListener("visibilitychange", tryPlay);
-    window.addEventListener("touchstart", tryPlay, { once: true, passive: true });
+    window.addEventListener("touchstart", tryPlay, { passive: true });
+    window.addEventListener("pointerdown", tryPlay, { passive: true });
+
+    const nudge = window.setInterval(() => {
+      attempts += 1;
+      tryPlay();
+      if ((!video.paused && video.currentTime > 0) || attempts > 40) {
+        window.clearInterval(nudge);
+      }
+    }, 400);
 
     return () => {
+      cancelled = true;
+      window.clearInterval(nudge);
       video.removeEventListener("loadeddata", tryPlay);
       video.removeEventListener("canplay", tryPlay);
+      video.removeEventListener("canplaythrough", tryPlay);
       document.removeEventListener("visibilitychange", tryPlay);
       window.removeEventListener("touchstart", tryPlay);
+      window.removeEventListener("pointerdown", tryPlay);
     };
   }, [src]);
 
@@ -92,8 +110,8 @@ export function Hero() {
   });
 
   return (
-    <section id="top" ref={track} className="relative bg-bg md:hero-track">
-      <div className="relative min-h-[100svh] overflow-hidden md:scroll-sticky md:sticky md:top-0 md:h-[100svh]">
+    <section id="top" ref={track} className="hero-track relative bg-bg">
+      <div className="scroll-sticky relative min-h-[100svh] overflow-hidden md:sticky md:top-0 md:h-[100svh]">
       {/* Full-bleed video plane */}
       <div ref={plane} className="absolute inset-0 will-change-transform">
         {/* eslint-disable-next-line @next/next/no-img-element */}

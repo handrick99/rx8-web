@@ -26,27 +26,43 @@ function isHeroPlaying(video: HTMLVideoElement) {
   return !video.paused && video.readyState >= 2 && video.currentTime > 0.05;
 }
 
+function hasHeroFrame(video: HTMLVideoElement) {
+  return video.readyState >= 2 && video.videoWidth > 0;
+}
+
 function waitForHeroPlaying(timeoutMs: number) {
   return new Promise<void>((resolve) => {
     let finished = false;
     let attached: HTMLVideoElement | null = null;
+    const started = performance.now();
 
     const done = () => {
       if (finished) return;
       finished = true;
       window.clearInterval(poll);
       window.clearTimeout(limit);
-      if (attached) attached.removeEventListener("playing", onPlaying);
+      if (attached) {
+        attached.removeEventListener("playing", onPlaying);
+        attached.removeEventListener("loadeddata", onReady);
+      }
       resolve();
     };
 
     const onPlaying = () => done();
+    const onReady = () => {
+      // Autoplay can be blocked; don't hold the loader once a frame is ready.
+      if (performance.now() - started > 1800) done();
+    };
 
     const nudge = (video: HTMLVideoElement) => {
       if (attached !== video) {
-        if (attached) attached.removeEventListener("playing", onPlaying);
+        if (attached) {
+          attached.removeEventListener("playing", onPlaying);
+          attached.removeEventListener("loadeddata", onReady);
+        }
         attached = video;
         video.addEventListener("playing", onPlaying);
+        video.addEventListener("loadeddata", onReady);
       }
       video.muted = true;
       video.defaultMuted = true;
@@ -54,6 +70,7 @@ function waitForHeroPlaying(timeoutMs: number) {
       const play = video.play();
       if (play) play.catch(() => {});
       if (isHeroPlaying(video)) done();
+      else if (hasHeroFrame(video) && performance.now() - started > 1800) done();
     };
 
     const poll = window.setInterval(() => {

@@ -15,7 +15,8 @@ export function ease(t: number) {
 
 export function pinnedProgress(el: HTMLElement) {
   const distance = el.offsetHeight - window.innerHeight;
-  if (distance <= 0) return 1;
+  // No pin room yet (layout not ready or track height missing) — stay at start.
+  if (distance <= 0) return 0;
   return clamp(-el.getBoundingClientRect().top / distance, 0, 1);
 }
 
